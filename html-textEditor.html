@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Editeur de texte</title>
+    <style>
+        strong{
+            color: rgb(99, 127, 202);
+            font-size: x-large;
+        }
+        #editor {
+            font-family: Arial, sans-serif;
+            font-size: 16px;
+            line-height: 1.5;
+            background-color: #f2f2f2;
+            padding: 10px;
+            border: 0.5px solid #d5eef1;
+            border-radius: 3px;
+            outline: none;
+            height: 200px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="editor" contenteditable="true">Bonjour, je suis un éditeur de texte.</div>
+
+
+    <script>
+        const regex = /#[^\s]+/g;
+        const regexStrong = /<strong>(\S+)<\/strong>/g;
+
+        const editor = document.getElementById('editor');
+
+        editor.addEventListener('input', function () {
+            let content = editor.textContent;
+            if (content.match(regex) != null) {
+                console.log(content.match(regex),)
+                const elementCustom = content.match(regex).map(match => match.slice(1));
+                // <!-- const elementReplace = elementCustom.map((data) => data.match(regexStrong) ? data.replace('<strong>', '').replace('</strong>', '') : data); -->
+                console.log(elementCustom, "++++++++++++++++ elementCustom")
+                elementCustom.forEach((data) => {
+                    const regexToReplace = new RegExp(`#${data}`);
+
+                    //console.log(editor.textContent.replace(regexToReplace, `#<strong>${data}</strong>`))
+                    content = content.replace(regexToReplace, `<strong>#${data}</strong>`);
+                    editor.innerHTML = content
+                    if (document.createRange) {
+                        range = document.createRange();
+                        range.selectNodeContents(editor);
+                        range.collapse(false);
+                        selection = window.getSelection();
+                        selection.removeAllRanges();
+                        selection.addRange(range);
+                    }
+                });
+            }
+        });
+
+
+    </script>
+</body>
+
+</html>
